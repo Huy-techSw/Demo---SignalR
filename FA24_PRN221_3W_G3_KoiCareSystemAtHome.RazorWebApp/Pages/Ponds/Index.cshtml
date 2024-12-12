@@ -1,0 +1,183 @@
+﻿@page
+@model FA24_PRN221_3W_G3_KoiCareSystemAtHome.RazorWebApp.Pages.Ponds.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="container-fluid mt-3">
+    <div class="row">
+        <div class="card">
+            <div class="card-body">
+                <h1>View Pond List</h1>
+                <p>
+                    <a asp-page="Create" class="btn btn-success">+ Create New</a>
+                </p>
+                <form method="get" class="form-inline mb-3">
+                    <div class="input-group" style="width: 40%;">
+                        <input type="text" id="searchTerm" name="SearchTerm" class="form-control" placeholder="Search by any field" />
+                        <div class="input-group-append ml-auto">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                </form>
+                </p>
+                <table id="idTable" class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Pond[0].PondName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Pond[0].UserId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Pond[0].ImageUrl)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Pond[0].Size)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Pond[0].Depth)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Pond[0].Shape)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Pond[0].Volume)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Pond[0].DrainCount)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Pond[0].PumpCapacity)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Pond[0].SkimmerCount)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Pond)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PondName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UserId)
+                                </td>
+                                <td>
+                                    <img src="@item.ImageUrl" alt="Pond Image" style="max-width: 100px; max-height: 100px;" />
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Size)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Depth)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Shape)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Volume)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DrainCount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PumpCapacity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SkimmerCount)
+                                </td>
+                                <td>
+                                    <a asp-page="./Edit" asp-route-id="@item.Id"><button type="button" class="btn btn-primary">Edit</button></a> |
+                                    <a asp-page="./Details" asp-route-id="@item.Id"><button type="button" class="btn btn-primary">Details</button></a> |
+                                    <a asp-page="./Delete" asp-route-id="@item.Id"><button type="button" class="btn btn-primary">Delete</button></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+                    <script src="~/lib/table-pagination.js"></script>
+                    <script>
+                        $("#idTable").createTablePagination({
+                            rowPerPage: 5,
+                        });
+                    </script>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script src="~/js/site.js"></script>
+        <script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
+        <script>
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/signalRServer")  // Make sure this matches the hub URL on the server
+                .build();
+
+            connection.start()
+                .then(() => {
+                    console.log("SignalR connection established");
+                })
+                .catch(err => {
+                    console.error("Error while establishing connection: ", err.toString());
+                });
+
+            connection.on("LoadPond", function (pond) {
+                console.log("LoadPond Event received:", pond);
+                const tableBody = document.querySelector("#idTable tbody");
+                if (tableBody) {
+                    let existingRow = document.getElementById(`pond-${pond.id}`);
+                    const newRowContent = `
+                        <td>${pond.pondName}</td>
+                        <td>${pond.userId}</td>
+                        <td>${pond.imageUrl ? `<img src="${pond.imageUrl}" alt="Pond Image" style="width: 100px; height: 100px;" />` : ''}</td>
+                        <td>${pond.size || 'N/A'}</td>
+                        <td>${pond.depth || 'N/A'}</td>
+                        <td>${pond.shape || 'N/A'}</td>
+                        <td>${pond.volume || 'N/A'}</td>
+                        <td>${pond.drainCount || 'N/A'}</td>
+                        <td>${pond.pumpCapacity || 'N/A'}</td>
+                        <td>${pond.skimmerCount || 'N/A'}</td>
+                        <td>
+                            <a href="./Edit?id=${pond.id}" class="btn btn-primary">Edit</a> |
+                            <a href="./Details?id=${pond.id}" class="btn btn-info">Details</a> |
+                            <a href="./Delete?id=${pond.id}" class="btn btn-danger">Delete</a>
+                        </td>`;
+                    if (existingRow) {
+                        existingRow.innerHTML = newRowContent;
+                    } else {
+                        const newRow = document.createElement("tr");
+                        newRow.id = `pond-${pond.id}`;
+                        newRow.innerHTML = newRowContent;
+                        tableBody.appendChild(newRow);
+                    }
+                }
+            });
+
+            connection.on("DeletePond", function (pondId) {
+                console.log("DeletePond Event received for pondId:", pondId);
+                const existingRow = document.getElementById(`pond-${pondId}`);
+                if (existingRow) {
+                    existingRow.remove();
+                }
+            });
+
+
+
+            connection.on("DeletePond", function (pondId) {
+                const existingRow = document.getElementById(`pond-${pondId}`);
+                if (existingRow) {
+                    existingRow.remove();
+                }
+            });
+
+        </script>
+    }
+
+
+

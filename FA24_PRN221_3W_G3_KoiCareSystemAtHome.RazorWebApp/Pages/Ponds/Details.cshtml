@@ -1,0 +1,86 @@
+﻿@page
+@model FA24_PRN221_3W_G3_KoiCareSystemAtHome.RazorWebApp.Pages.Ponds.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Pond</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pond.PondName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pond.PondName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pond.UserId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pond.UserId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pond.ImageUrl)
+        </dt>
+        <dd class="col-sm-10">
+            @if (!string.IsNullOrEmpty(Model.Pond.ImageUrl))
+            {
+                <img src="@Model.Pond.ImageUrl" alt="Pond Image" style="width: 150px; height: 150px;" />
+            }
+            else
+            {
+                <span>No image</span>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pond.Size)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pond.Size)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pond.Depth)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pond.Depth)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pond.Shape)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pond.Shape)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pond.Volume)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pond.Volume)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pond.DrainCount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pond.DrainCount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pond.PumpCapacity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pond.PumpCapacity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Pond.SkimmerCount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Pond.SkimmerCount)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Pond.Id"><button type="button" class="btn btn-primary">Edit</button></a> |
+    <a asp-page="./Index"><button type="button" class="btn btn-primary">Back to list</button></a>
+</div>

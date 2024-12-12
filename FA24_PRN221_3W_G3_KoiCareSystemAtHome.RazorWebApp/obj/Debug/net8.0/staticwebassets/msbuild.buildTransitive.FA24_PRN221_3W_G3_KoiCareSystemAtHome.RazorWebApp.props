@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\FA24_PRN221_3W_G3_KoiCareSystemAtHome.RazorWebApp.props" />
+</Project>
